@@ -1,0 +1,138 @@
+﻿@page "/member/edit"
+@attribute [Authorize]
+
+<PageTitle>DatingApp - Edit Profile</PageTitle>
+
+<section>
+    @if (_showError)
+    {
+        <MudAlert Severity="Severity.Error">@_errorText</MudAlert>
+    }
+
+    <MudGrid>
+        <MudItem xs="12" md="4" lg="3">
+            <MudText Typo="Typo.h3">Your Profile</MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="8" lg="9">
+            @if (_changesMade)
+            {
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    Remember to save your changes!
+                </MudAlert>
+            }
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Justify="Justify.Center">
+
+        <MudItem xs="12" md="4" lg="3">
+            <MudCard Elevation="6" Style="border: 1px solid rgba(0,0,0,.125);">
+                <MudCardHeader>
+                    <MudImage Class="img-thumbnail mx-auto"
+                              Src="@MemberStateService.MainPhoto"
+                              Alt="@MemberStateService.AppUser.KnownAs"
+                              Style="border: 4px solid var(--mud-palette-surface);" />
+                </MudCardHeader>
+                <MudCardContent Class="mx-auto" Style="width: 90%; height: 90%; max-width: 100%;">
+                    <MudText Style="font-weight: bolder;">Location:</MudText>
+                    <MudText Class="mb-3">@MemberStateService.AppUser.City, @MemberStateService.AppUser.State</MudText>
+                    <MudText Style="font-weight: bolder;">Age:</MudText>
+                    <MudText Class="mb-3">@MemberStateService.AppUser.Age</MudText>
+                    <MudText Style="font-weight: bolder;">Last active:</MudText>
+                    <MudText Class="mb-3">@DateTime.Now.Subtract(MemberStateService.AppUser.LastActive).Humanize()</MudText>
+                    <MudText Style="font-weight: bolder;">Member since:</MudText>
+                    <MudText>@MemberStateService.AppUser.Created.ToLongDateString()</MudText>
+                </MudCardContent>
+                @if (_changesMade)
+                {
+                    <MudCardActions>
+                        <MudGrid Class="d-flex justify-center">
+
+                            <MudItem xs="8" Class="px-1 pl-3">
+                                <MudButton Variant="Variant.Filled"
+                                       Color="Color.Success"
+                                       ButtonType="ButtonType.Submit"
+                                       form="editForm"
+                                       Style="width: 100%;">
+                                    Save Changes
+                                </MudButton>
+                            </MudItem>
+
+                        </MudGrid>
+                    </MudCardActions>
+                }
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" md="8" lg="9">
+            <MudTabs Elevation="6" Centered="true" Rounded="true" Color="Color.Primary">
+
+                <MudTabPanel Text="@($"About {MemberStateService.AppUser.KnownAs}")">
+                    <MudContainer Class="mt-5 px-0">
+                        <EditForm id="editForm" Model="@_memberUpdate" @oninput="(e) => OnProfileUpdated(e)" OnValidSubmit="HandleValidSubmitAsync">
+                            <DataAnnotationsValidator />
+
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudTextField Class="mb-10"
+                                                  T="string"
+                                                  Label="Description"
+                                                  Variant="Variant.Outlined"
+                                                  @bind-Value="@_memberUpdate.Introduction"
+                                                  Lines="6" />
+                                    <ValidationMessage For="(() => MemberStateService.AppUser.Introduction)" />
+
+                                    <MudTextField Class="mb-10"
+                                                  T="string"
+                                                  Label="Looking for"
+                                                  Variant="Variant.Outlined"
+                                                  @bind-Value="@_memberUpdate.LookingFor"
+                                                  Lines="6" />
+                                    <ValidationMessage For="(() => MemberStateService.AppUser.LookingFor)" />
+
+                                    <MudTextField Class="mb-10"
+                                                  T="string"
+                                                  Label="Interests"
+                                                  Variant="Variant.Outlined"
+                                                  @bind-Value="@_memberUpdate.Interests"
+                                                  Lines="6" />
+                                    <ValidationMessage For="(() => MemberStateService.AppUser.Interests)" />
+
+                                    <MudGrid>
+                                        <MudItem xs="6">
+                                            <MudTextField Class="mb-10"
+                                                          T="string"
+                                                          Label="City"
+                                                          Variant="Variant.Outlined"
+                                                          @bind-Value="@_memberUpdate.City" />
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                            <MudTextField Class="mb-10"
+                                                          T="string"
+                                                          Label="State"
+                                                          Variant="Variant.Outlined"
+                                                          @bind-Value="@_memberUpdate.State" />
+                                        </MudItem>
+                                    </MudGrid>
+
+                                    <ValidationMessage For="(() => _memberUpdate.City)" />
+                                    <ValidationMessage For="(() => _memberUpdate.State)" />
+                                </MudItem>
+                            </MudGrid>
+
+                        </EditForm>
+                    </MudContainer>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Photos">
+                    <MudContainer Class="mt-5 px-0">
+                        <PhotoEditor OnImageChanged="ImageChangedCallbackAsync" />
+                    </MudContainer>
+                </MudTabPanel>
+
+            </MudTabs>
+        </MudItem>
+
+    </MudGrid>
+</section>

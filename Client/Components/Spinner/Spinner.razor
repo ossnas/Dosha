@@ -1,0 +1,60 @@
+﻿@inject ISpinnerService SpinnerService
+@implements IDisposable
+
+@if (isVisible)
+{
+    <div class="spinner-container">
+        @if (_spinType == 0)
+        {
+            <Spinner_Wave />
+        }
+        else if (_spinType == 1)
+        {
+            <Spinner_ChasingDots />
+        }
+        else if (_spinType == 2)
+        {
+            <Spinner_ThreeDots />
+        }
+        else if (_spinType == 3)
+        {
+            <Spinner_FadingCircle />
+        }
+        else
+        {
+            <Spinner_Wave />
+        }
+    </div>
+}
+
+@code
+{
+    private Random _rndGen = new();
+    private int _spinType = 0;
+    protected bool isVisible { get; set; }
+
+    protected override void OnInitialized()
+    {
+        SpinnerService.OnShow += ShowSpinner;
+        SpinnerService.OnHide += HideSpinner;
+        _spinType = _rndGen.Next(4);
+    }
+
+    public void ShowSpinner()
+    {
+        isVisible = true;
+        StateHasChanged();
+    }
+
+    public void HideSpinner()
+    {
+        isVisible = false;
+        StateHasChanged();
+    }
+
+public void Dispose()
+    {
+        SpinnerService.OnShow -= ShowSpinner;
+        SpinnerService.OnHide -= HideSpinner;
+    }
+}
