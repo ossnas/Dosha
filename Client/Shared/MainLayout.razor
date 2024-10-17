@@ -11,7 +11,7 @@
         @if (_drawerOpen == false)
         {
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="() => _drawerOpen = !_drawerOpen" />
-            <MudText Typo="Typo.h6" Style="white-space: nowrap">Dating App</MudText>
+            <MudText Typo="Typo.h6" Style="white-space: nowrap">Dosha Dating</MudText>
         }
 
         <AuthorizeView Context="AppBarContext">
@@ -119,7 +119,7 @@
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Color="@(_currentTheme == lightTheme ? Color.Dark : Color.Dark)">
         <MudDrawerHeader Class="d-flex align-center" Style="padding: 0px 12px; min-height: 32px;">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="() => _drawerOpen = !_drawerOpen" />
-            <MudText Typo="Typo.h6" Style="white-space: nowrap">Dating App</MudText>
+            <MudText Typo="Typo.h6" Style="white-space: nowrap">Dosha Dating</MudText>
         </MudDrawerHeader>
         <MudDrawerContainer>
             <AuthorizeView Context="DrawerContext">
@@ -164,6 +164,9 @@
                         <MudText Typo="Typo.body1">Login</MudText>
                     </MudNavLink>
 
+                    <MudNavLink Href="/about" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person">
+                        <MudText Typo="Typo.body1">About</MudText>
+                    </MudNavLink>
                 </NotAuthorized>
 
             </AuthorizeView>
